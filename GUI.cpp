@@ -1,7 +1,6 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <iostream>
-#include <thread>
 
 #include "GUI.h"
 
@@ -11,16 +10,17 @@ SDL_Point mousePosLeftClickDownEnd = { -1, -1 };
 bool isMouseLeftClickDown = false;
 
 SDL_bool isInitialized5 = SDL_FALSE;
+SDL_bool closeMVHThread = SDL_FALSE;
 
-void MouseVariablesHandle()
+int MouseVariablesHandle(void*)
 {
-	Uint32 button;
+	Uint32 key;
 
-	while (1)
+	while (!closeMVHThread)
 	{
-		button = SDL_GetMouseState(&mousePosition.x, &mousePosition.y);
+		key = SDL_GetMouseState(&mousePosition.x, &mousePosition.y);
 
-		switch (SDL_BUTTON(button))
+		switch (SDL_BUTTON(key))
 		{
 		case 1:
 			if (!isMouseLeftClickDown)
@@ -45,26 +45,25 @@ void MouseVariablesHandle()
 
 		SDL_Delay(1);
 	}
+
+	return 0;
 }
 
-GUI::Button::Button(SDL_Rect* buttonRect, SDL_Color* buttonColor, float size, std::string buttonText, SDL_Color* textColor, int buttonTextFlags)
+GUI::Button::Button(SDL_Rect* buttonRect)
 {
 	if (!isInitialized5)
 	{
-		std::thread MVH(MouseVariablesHandle);
-		MVH.detach();
+		SDL_Thread *mvh;
+		mvh = SDL_CreateThread(MouseVariablesHandle, "MHV", (void *)NULL);
+		SDL_DetachThread(mvh);
+
 		isInitialized5 = SDL_TRUE;
 	}
 
 	this->buttonRect = *buttonRect;
-	this->size = size;
-	this->buttonColor = *buttonColor;
-	this->buttonText = buttonText;
-	this->textColor = *textColor;
-	this->buttonTextFlags = buttonTextFlags;
 }
 
-bool GUI::Button::IsButtonPressed()
+bool GUI::Button::OnButtonPressed()
 {
 	if (SDL_PointInRect(&mousePosLeftClickDownStart, &buttonRect) && SDL_PointInRect(&mousePosLeftClickDownEnd, &buttonRect))
 	{
@@ -77,12 +76,12 @@ bool GUI::Button::IsButtonPressed()
 	return false;
 }
 
-bool GUI::Button::IsCursorOverButton()
+bool GUI::Button::OnCursorOverButton()
 {
 	return (SDL_PointInRect(&mousePosition, &buttonRect)) ? true : false;
 }
 
-void GUI::Button::DrawButton(SDL_Renderer* renderer, TTF_Font* font)
+void GUI::Button::DrawButton(SDL_Renderer* renderer, const std::string buttonText, const SDL_Color* textColor, const float size, TTF_Font* font, const SDL_Color*buttonColor, const Uint32 buttonTextFlags)
 {
 	SDL_Rect tempTextRect = { 0, 0, 0, 0 };
 	TTF_SizeText(font, buttonText.c_str(), &tempTextRect.w, &tempTextRect.h);
@@ -131,10 +130,10 @@ void GUI::Button::DrawButton(SDL_Renderer* renderer, TTF_Font* font)
 		break;
 	}
 
-	SDL_SetRenderDrawColor(renderer, buttonColor.r, buttonColor.g, buttonColor.b, buttonColor.a);
+	SDL_SetRenderDrawColor(renderer, buttonColor->r, buttonColor->g, buttonColor->b, buttonColor->a);
 	SDL_RenderFillRect(renderer, &buttonRect);
 	SDL_Point tempPoint = { textRect.x, textRect.y };
-	text.RenderText(renderer, &tempPoint, buttonText, size, font, &textColor);
+	text.RenderText(renderer, &tempPoint, buttonText, size, font, textColor);
 }
 
 SDL_bool isInitialized4 = SDL_FALSE;

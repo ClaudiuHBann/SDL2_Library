@@ -20,15 +20,15 @@ int main(int argc, char *argv[])
 	bool gameRunning = true;
 
 	GUI::Text t;
-	TTF_Font *f = t.LoadFont("C:\\Users\\Claudiu HBann\\Desktop\\C++ Projects\\Working ON Projects\\SDL Project\\Release\\Resources\\arial.ttf", 10);
+	TTF_Font *f = t.LoadFont("C:\\Users\\Claudiu HBann\\Desktop\\C++ Projects\\Working ON Projects\\SDL Project\\Resources\\arial.ttf", 10);
 	SDL_Point p = { 0, 0 };
 	SDL_Color c = { 0, 255, 0, 0 };
-	SDL_Rect r = { 0, 0, 400, 400 };
+	SDL_Rect r = { 0, 0, 100, 100 };
 	SDL_Color c2 = { 255, 0, 0, 0 };
 
-	GUI::Button ui(mainRenderer, &r, &c2, 1.0f, "blabla", &c, 0);
+	GUI::Button ui(&r);
 
-	ui.DrawButton(mainRenderer, f);
+	ui.DrawButton(mainRenderer, "Pulea Spataru", &c2, 1.0f, f, &c, GUI::ButtonTextPositions::MIDDLE);
 	SDL_RenderPresent(mainRenderer);
 
 	while (gameRunning)
@@ -42,15 +42,13 @@ int main(int argc, char *argv[])
 				gameRunning = false;
 				break;
 
-			case SDL_MOUSEBUTTONDOWN:
-				if (ui.IsButtonPressed())
-				{
-					std::cout << "Button apasat!\n";
-				}
-				break;
-
 			default:
 				break;
+			}
+
+			if (ui.OnButtonPressed())
+			{
+				std::cout << "Button apasat!\n";
 			}
 		}
 	}

@@ -1,8 +1,9 @@
-#pragma once
+#ifndef _GUI_H
+#define _GUI_H
 
+#include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
-#include <thread>
 #include <map>
 
 #include "Base.h"
@@ -44,22 +45,18 @@ private:
 class GUI::Button
 {
 public:
-	Button(SDL_Rect* buttonRect, SDL_Color* buttonColor, float size, std::string buttonText, SDL_Color* textColor, int buttonTextFlags);
+	SDL_Rect buttonRect = { 0, 0, 0, 0 };
+
+	Button(SDL_Rect* buttonRect);
 	Button() {}
 	~Button() {}
 
-	SDL_Rect buttonRect = { 0, 0, 0, 0 };
-	SDL_Color buttonColor = { 0, 0, 0, 0 };
-
-	float size = 1.0f;
-	std::string buttonText = "";
-	SDL_Color textColor = { 0, 0, 0, 0 };
-	int buttonTextFlags = 0;
-
-	bool IsButtonPressed();
-	bool IsCursorOverButton();
-	void DrawButton(SDL_Renderer *renderer, TTF_Font *font);
+	bool OnButtonPressed();
+	bool OnCursorOverButton();
+	void DrawButton(SDL_Renderer *renderer, const std::string buttonText, const SDL_Color *textColor, const float size, TTF_Font *font, const SDL_Color *buttonColor, const Uint32 buttonTextFlags);
 
 private:
 	GUI::Text text;
 };
+
+#endif // _GUI_H
