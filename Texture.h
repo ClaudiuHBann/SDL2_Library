@@ -13,8 +13,8 @@ public:
 	Texture();
 	~Texture();
 
-	SDL_Texture* LoadTexture(SDL_Renderer* renderer, const std::string texturePath);
-	void RenderTexture(SDL_Renderer* renderer, const SDL_Point* position, const float size, SDL_Texture* texture);
+	SDL_Texture* LoadTexture(SDL_Renderer* renderer, const std::string& texturePath);
+	void RenderTexture(SDL_Renderer* renderer, const SDL_Point& position, const SDL_FPoint &size, SDL_Texture* texture);
 	void RemoveTexture(SDL_Texture* texture);
 
 private:

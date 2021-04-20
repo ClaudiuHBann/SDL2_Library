@@ -49,8 +49,14 @@ Sound::~Sound()
 	chunksMap.clear();
 }
 
-Mix_Music *Sound::LoadMusic(const std::string musicPath)
+Mix_Music *Sound::LoadMusic(const std::string& musicPath)
 {
+	if (&musicPath == nullptr)
+	{
+		SDL_PrintError("std::string* parameter from Sound::LoadMusic function call is null!");
+		return nullptr;
+	}
+
 	if (!SDL_CheckFilePath(musicPath))
 	{
 		SDL_PrintError("std::string parameter from Sound::LoadMusic function call is invalid!");
@@ -77,8 +83,14 @@ Mix_Music *Sound::LoadMusic(const std::string musicPath)
 	return newMusic;
 }
 
-Mix_Chunk *Sound::LoadChunk(const std::string chunkPath)
+Mix_Chunk *Sound::LoadChunk(const std::string &chunkPath)
 {
+	if (&chunkPath == nullptr)
+	{
+		SDL_PrintError("std::string* parameter from Sound::LoadChunk function call is null!");
+		return nullptr;
+	}
+
 	if (!SDL_CheckFilePath(chunkPath))
 	{
 		SDL_PrintError("std::string parameter from Sound::LoadChunk function call is invalid!");

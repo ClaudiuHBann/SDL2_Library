@@ -12,20 +12,20 @@ namespace GUI
 {
 	class Button;
 	class Text;
-	enum ButtonTextPositions;
+	enum class ButtonTextPositions;
 }
 
-enum GUI::ButtonTextPositions
+enum class GUI::ButtonTextPositions
 {
 	TOP_LEFT = 0,
-	TOP_MIDDLE = 1,
-	TOP_RIGHT = 2,
-	LEFT_MIDDLE = 3,
-	MIDDLE = 4,
-	RIGHT_MIDDLE = 5,
-	BOTTOM_LEFT = 6,
-	BOTTOM_MIDDLE = 7,
-	BOTTOM_RIGHT = 8,
+	TOP_MIDDLE,
+	TOP_RIGHT,
+	LEFT_MIDDLE,
+	MIDDLE,
+	RIGHT_MIDDLE,
+	BOTTOM_LEFT,
+	BOTTOM_MIDDLE,
+	BOTTOM_RIGHT,
 };
 
 class GUI::Text
@@ -34,8 +34,8 @@ public:
 	Text();
 	~Text();
 
-	TTF_Font *LoadFont(const std::string fontPath, const Uint8 fontSize);
-	void RenderText(SDL_Renderer *renderer, const SDL_Point *position, const std::string text, const float size, TTF_Font *font, const SDL_Color *color);
+	TTF_Font *LoadFont(const std::string &fontPath, const Uint8 fontSize);
+	void RenderText(SDL_Renderer *renderer, const SDL_Point &position, const std::string &text, const float size, TTF_Font *font, const SDL_Color &color);
 	void RemoveFont(TTF_Font *font);
 
 private:
@@ -47,15 +47,16 @@ class GUI::Button
 public:
 	SDL_Rect buttonRect = { 0, 0, 0, 0 };
 
-	Button(SDL_Rect* buttonRect);
+	Button(SDL_Rect& buttonRect);
 	Button() {}
-	~Button() {}
+	~Button();
 
 	bool OnButtonPressed();
 	bool OnCursorOverButton();
-	void DrawButton(SDL_Renderer *renderer, const std::string buttonText, const SDL_Color *textColor, const float size, TTF_Font *font, const SDL_Color *buttonColor, const Uint32 buttonTextFlags);
+	void DrawButton(SDL_Renderer *renderer, const std::string& buttonText, const SDL_Color &textColor, const float size, TTF_Font *font, const SDL_Color &buttonColor, const Uint8 buttonTextFlags);
 
 private:
+	SDL_Thread *mvh = nullptr;
 	GUI::Text text;
 };
 

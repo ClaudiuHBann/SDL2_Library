@@ -41,7 +41,7 @@ Texture::~Texture()
 	texturesMap.clear();
 }
 
-void Texture::RenderTexture(SDL_Renderer *renderer, const SDL_Point *position, const float size, SDL_Texture *texture)
+void Texture::RenderTexture(SDL_Renderer *renderer, const SDL_Point &position, const SDL_FPoint &size, SDL_Texture *texture)
 {
 	if (renderer == nullptr)
 	{
@@ -55,28 +55,34 @@ void Texture::RenderTexture(SDL_Renderer *renderer, const SDL_Point *position, c
 		return;
 	}
 
-	if (position == nullptr)
+	if (&position == nullptr)
 	{
 		SDL_PrintError("SDL_Point* parameter from Texture::RenderTexture function call is null!");
 		return;
 	}
 
-	if (size == 0)
+	if (&size == 0)
 	{
 		SDL_PrintError("float parameter from Texture::RenderTexture function call is null!");
 		return;
 	}
 
-	SDL_Rect textureRect = { position->x, position->y, 0, 0 };
+	SDL_Rect textureRect = { position.x, position.y, 0, 0 };
 	SDL_QueryTexture(texture, nullptr, nullptr, &textureRect.w, &textureRect.h);
-	textureRect.w *= size;
-	textureRect.h *= size;
+	textureRect.w *= size.x;
+	textureRect.h *= size.y;
 
 	SDL_RenderCopy(renderer, texture, nullptr, &textureRect);
 }
 
-SDL_Texture *Texture::LoadTexture(SDL_Renderer *renderer, const std::string texturePath)
+SDL_Texture *Texture::LoadTexture(SDL_Renderer *renderer, const std::string& texturePath)
 {
+	if (&texturePath == nullptr)
+	{
+		SDL_PrintError("std::string* parameter from Texture::LoadTexture function call is null!");
+		return nullptr;
+	}
+
 	if (renderer == nullptr)
 	{
 		SDL_PrintError("SDL_Renderer* parameter from Texture::LoadTexture function call is null!");

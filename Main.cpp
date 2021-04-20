@@ -26,13 +26,14 @@ int main(int argc, char *argv[])
 	SDL_Rect r = { 0, 0, 100, 100 };
 	SDL_Color c2 = { 255, 0, 0, 0 };
 
-	GUI::Button ui(&r);
-
-	ui.DrawButton(mainRenderer, "Pulea Spataru", &c2, 1.0f, f, &c, GUI::ButtonTextPositions::MIDDLE);
+	t.RenderText(mainRenderer, { 200, 200 }, "SALUT", -2.0f, f, { 0, 0, 255, 255 });
 	SDL_RenderPresent(mainRenderer);
 
 	while (gameRunning)
 	{
+		t.RenderText(mainRenderer, { 200, 200 }, "SALUT", -2.0f, f, { 0, 0, 255, 255 });
+		SDL_RenderPresent(mainRenderer);
+
 // 		while (SDL_PollEvent(&event))
 		while (SDL_WaitEvent(&event) >= 0 && gameRunning)
 		{
@@ -44,11 +45,6 @@ int main(int argc, char *argv[])
 
 			default:
 				break;
-			}
-
-			if (ui.OnButtonPressed())
-			{
-				std::cout << "Button apasat!\n";
 			}
 		}
 	}

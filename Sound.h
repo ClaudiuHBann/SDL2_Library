@@ -13,8 +13,8 @@ public:
 	Sound();
 	~Sound();
 
-	Mix_Music *LoadMusic(const std::string musicPath);
-	Mix_Chunk *LoadChunk(const std::string chunkPath);
+	Mix_Music *LoadMusic(const std::string& musicPath);
+	Mix_Chunk *LoadChunk(const std::string& chunkPath);
 
 	void PlayMusic(Mix_Music *music, const SDL_bool inALoop = SDL_FALSE);
 	void PauseMusic(const Mix_Music *music);
