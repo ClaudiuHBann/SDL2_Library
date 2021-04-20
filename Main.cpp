@@ -8,6 +8,8 @@
 #include "Base.h"
 #include "Sound.h"
 #include "Texture.h"
+#include "Collision.h"
+#include "Shapes.h"
 #include "GUI.h"
 
 int main(int argc, char *argv[])
@@ -19,20 +21,9 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	bool gameRunning = true;
 
-	GUI::Text t;
-	TTF_Font *f = t.LoadFont("C:\\Users\\Claudiu HBann\\Desktop\\C++ Projects\\Working ON Projects\\SDL Project\\Resources\\arial.ttf", 10);
-	SDL_Point p = { 0, 0 };
-	SDL_Color c = { 0, 255, 0, 0 };
-	SDL_Rect r = { 0, 0, 100, 100 };
-	SDL_Color c2 = { 255, 0, 0, 0 };
-
-	t.RenderText(mainRenderer, { 200, 200 }, "SALUT", -2.0f, f, { 0, 0, 255, 255 });
-	SDL_RenderPresent(mainRenderer);
-
 	while (gameRunning)
 	{
-		t.RenderText(mainRenderer, { 200, 200 }, "SALUT", -2.0f, f, { 0, 0, 255, 255 });
-		SDL_RenderPresent(mainRenderer);
+
 
 // 		while (SDL_PollEvent(&event))
 		while (SDL_WaitEvent(&event) >= 0 && gameRunning)

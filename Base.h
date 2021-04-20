@@ -3,7 +3,27 @@
 
 #include <SDL.h>
 #include <list>
+#include <vector>
 #include <string>
+
+typedef struct SDL_Triangle
+{
+	SDL_Point point1;
+	SDL_Point point2;
+	SDL_Point point3;
+}SDL_Triangle;
+
+typedef struct SDL_FTriangle
+{
+	SDL_FPoint point1;
+	SDL_FPoint point2;
+	SDL_FPoint point3;
+}SDL_FTriangle;
+
+typedef struct SDL_Polygon
+{
+	std::vector<SDL_Point> points;
+}SDL_Polygon;
 
 class Base
 {

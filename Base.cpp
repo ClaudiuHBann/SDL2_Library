@@ -19,7 +19,7 @@ Base::Base()
 			SDL_PrintError(" Could not initialize SDL. Error: " + std::string(SDL_GetError()));
 		}
 
-		srand(time(0));
+		srand(time(NULL));
 
 		isInitialized1 = SDL_TRUE;
 	}
@@ -177,7 +177,7 @@ SDL_bool SDL_CheckFilePath(const std::string& filePath)
 	if (&filePath == nullptr)
 	{
 		SDL_PrintError("std::string* parameter from SDL_CheckFilePath function call is null!");
-		return;
+		return SDL_FALSE;
 	}
 
 	struct stat info;

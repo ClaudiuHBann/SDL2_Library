@@ -63,7 +63,7 @@ GUI::Button::Button(SDL_Rect &buttonRect)
 
 		if (mvh == nullptr)
 		{
-			SDL_PrintError(" Could not create thread for button handling! Error: " + std::string(SDL_GetError()));
+			SDL_PrintError("Could not create thread for button handling! Error: " + std::string(SDL_GetError()));
 		}
 		else
 		{
@@ -236,7 +236,7 @@ TTF_Font *GUI::Text::LoadFont(const std::string &fontPath, const Uint8 fontSize)
 	if (&fontPath == nullptr)
 	{
 		SDL_PrintError("std::string* parameter from GUI::Text::LoadFont function call is null!");
-		return;
+		return nullptr;
 	}
 
 	if (!SDL_CheckFilePath(fontPath))
