@@ -56,7 +56,6 @@ public:
 	void DrawButton(SDL_Renderer *renderer, const std::string& buttonText, const SDL_Color &textColor, const float size, TTF_Font *font, const SDL_Color &buttonColor, const Uint8 buttonTextFlags);
 
 private:
-	SDL_Thread *mvh = nullptr;
 	GUI::Text text;
 };
 

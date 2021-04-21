@@ -6,6 +6,18 @@
 #include <vector>
 #include <string>
 
+typedef struct SDL_Circle
+{
+	SDL_Point point;
+	Uint16 radius;
+}SDL_Circle;
+
+typedef struct SDL_FCircle
+{
+	SDL_FPoint point;
+	Uint16 radius;
+}SDL_FCircle;
+
 typedef struct SDL_Triangle
 {
 	SDL_Point point1;
@@ -24,6 +36,11 @@ typedef struct SDL_Polygon
 {
 	std::vector<SDL_Point> points;
 }SDL_Polygon;
+
+typedef struct SDL_FPolygon
+{
+	std::vector<SDL_FPoint> points;
+}SDL_FPolygon;
 
 class Base
 {

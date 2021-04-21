@@ -4,6 +4,7 @@
 
 #include "GUI.h"
 
+SDL_Thread *mvh = nullptr;
 SDL_bool closeMVHThread = SDL_FALSE;
 SDL_Point mousePosition = { -1, -1 };
 SDL_Point mousePosLeftClickDownStart = { -1, -1 };

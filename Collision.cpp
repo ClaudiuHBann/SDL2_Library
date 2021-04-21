@@ -1,50 +1,47 @@
 #include "Collision.h"
 
+SDL_Thread *checkDistances = nullptr;
+SDL_Thread *checkCollision = nullptr;
 SDL_bool isInitialized6 = SDL_FALSE;
 SDL_bool closeThreads = SDL_FALSE;
 Uint8 numberOfCollisionObjects = 0;
+
+std::list<Collision2D *> shapesList;
+std::list<Collision2D *> shapesListForCollisionCheck;
 
 int CheckDistanceBetweenObjects(void *)
 {
 	while (closeThreads)
 	{
+		for (auto &i : shapesList)
+		{
+			for (auto &j : shapesList)
+			{
 
+			}
+		}
 	}
 
 	return 0;
 }
 
-int CheckCollisionBetweenObjects(void *)
+int Collision2D::CheckCollisionBetweenObjects(void *)
 {
 	while (closeThreads)
 	{
-
+		for (auto &i : shapesListForCollisionCheck)
+		{
+			for (auto &j : shapesListForCollisionCheck)
+			{
+				
+			}
+		}
 	}
 
 	return 0;
 }
 
-Collision2D::Collision2D(Shape::Circle &circle)
-{
-	circlesList.push_back(&circle);
-}
-
-Collision2D::Collision2D(Shape::Triangle &triangle)
-{
-	trianglesList.push_back(&triangle);
-}
-
-Collision2D::Collision2D(Shape::Rectangle &rectangle)
-{
-	rectanglesList.push_back(&rectangle);
-}
-
-Collision2D::Collision2D(Shape::Polygon &polygon)
-{
-	polygonsList.push_back(&polygon);
-}
-
-Collision2D::Collision2D()
+void CheckForInit()
 {
 	numberOfCollisionObjects++;
 
@@ -53,11 +50,28 @@ Collision2D::Collision2D()
 		checkDistances = SDL_CreateThread(CheckDistanceBetweenObjects, "CD", (void *)NULL);
 		SDL_DetachThread(checkDistances);
 
-		checkCollision = SDL_CreateThread(CheckDistanceBetweenObjects, "CC", (void *)NULL);
+		checkCollision = SDL_CreateThread(Collision2D::CheckCollisionBetweenObjects, "CC", (void *)NULL);
 		SDL_DetachThread(checkCollision);
 
 		isInitialized6 = SDL_TRUE;
 	}
+}
+
+Collision2D::Collision2D(Shape2D &shape)
+{
+	if (&shape == nullptr)
+	{
+		SDL_PrintError("Circle* parameter from Collision2D constructor is null");
+		return;
+	}
+	
+	CheckForInit();
+	shapesList.push_back(&shape);
+}
+
+Collision2D::Collision2D()
+{
+	CheckForInit();
 }
 
 Collision2D::~Collision2D()
@@ -70,10 +84,20 @@ Collision2D::~Collision2D()
 
 		delete checkCollision;
 		delete checkDistances;
+
+		shapesList.clear();
+		shapesListForCollisionCheck.clear();
+	}
+}
+
+void Collision2D::AddCollision2D(Shape2D &shape)
+{
+	if (&shape == nullptr)
+	{
+		SDL_PrintError("Circle* parameter from Collision2D constructor is null");
+		return;
 	}
 
-	for (auto &i : circlesList)
-	{
-		//aici
-	}
+	CheckForInit();
+	shapesList.push_back(&shape);
 }
