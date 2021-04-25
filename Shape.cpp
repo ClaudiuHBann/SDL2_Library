@@ -1,89 +1,113 @@
 #include "Shape.h"
 
-#define NULL63(var, type, what, where) if (CheckForNullity(circle, what, where, rotation, scale))\
-{\
-    this->var = new type;\
-    *(this->var) = var;\
-	ScaleShape2D();\
-}
-
-#define DELETE(var) if (var != nullptr)\
-{\
-	delete var;\
-}
-
-Shape2D::Shape2D(const SDL_Circle &circle, const SDL_Point &rotation, const SDL_FPoint &scale)
+Line::Line(const SDL_Point &pos1, const SDL_Point &pos2, const float thickness, const SDL_Color &color, const SDL_Point &rotation)
 {
-	NULL63(circle, SDL_Circle, "SDL_Circle*", "Shape2D constructor")
+	if (!NULL63(&pos1, "SDL_Point*", "Line constructor") && !NULL63(&pos2, "SDL_Point*", "Line constructor") && !NULL63(&color, "SDL_Color*", "Line constructor") && !NULL63(&rotation, "SDL_Point*", "Line constructor"))
+	{
+		pointsPos.push_back(pos1);
+		pointsPos.push_back(pos2);
+		this->thickness = thickness;
+		this->color = color;
+		this->rotation = rotation;
+	}
 }
 
-Shape2D::Shape2D(const SDL_Triangle &triangle, const SDL_Point &rotation, const SDL_FPoint &scale)
+void Line::Draw(SDL_Renderer *renderer)
 {
-	NULL63(triangle, SDL_Triangle, "SDL_Triangle*", "Shape2D constructor")
-}
-
-Shape2D::Shape2D(const SDL_Rect &rectangle, const SDL_Point &rotation, const SDL_FPoint &scale)
-{
-	NULL63(rectangle, SDL_Rect, "SDL_Rect*", "Shape2D constructor")
-}
-
-Shape2D::Shape2D(const SDL_Polygon &polygon, const SDL_Point &rotation, const SDL_FPoint &scale)
-{
-	NULL63(polygon, SDL_Polygon, "SDL_Polygon*", "Shape2D constructor")
-}
-
-Shape2D::~Shape2D()
-{
-	DELETE(circle)
-		DELETE(triangle)
-		DELETE(rectangle)
-		DELETE(polygon)
-}
-
-void Shape2D::Draw(SDL_Renderer *renderer)
-{
-
-}
-
-void Shape2D::Set(const SDL_Circle &circle, const SDL_Point &rotation, const SDL_FPoint &scale)
-{
-	*this->circle = circle;
-}
-
-void Shape2D::Set(const SDL_Triangle &triangle, const SDL_Point &rotation, const SDL_FPoint &scale)
-{
-	*this->triangle = triangle;
-}
-
-void Shape2D::Set(const SDL_Rect &rectangle, const SDL_Point &rotation, const SDL_FPoint &scale)
-{
-	*this->rectangle = rectangle;
-}
-
-void Shape2D::Set(const SDL_Polygon &polygon, const SDL_Point &rotation, const SDL_FPoint &scale)
-{
-	*this->polygon = polygon;
-}
-
-void Shape2D::ScaleShape2D()
-{
-	if (circle != nullptr)
+	if (NULL63(renderer, "SDL_Renderer*", "Line::Draw function"))
 	{
 		return;
 	}
 
-	if (triangle != nullptr)
+	Uint8 r = 0, g = 0, b = 0, a = 0;
+	SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
+
+	SDL_Point tempPos1 = pointsPos[0], tempPos2 = pointsPos[1];
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	for (Uint16 i = 0; i < thickness; i++)
+	{
+		SDL_RenderDrawLine(renderer, tempPos1.x, tempPos1.y, tempPos2.x, tempPos2.y);
+		tempPos1.x--;
+		tempPos1.y--;
+		tempPos2.x--;
+		tempPos2.y--;
+	}
+
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+}
+
+Line::~Line()
+{
+	pointsPos.clear();
+}
+
+Circle::Circle(const SDL_Point &position, const float diameter, const SDL_Color &color, const SDL_Point &rotation)
+{
+	if (!NULL63(&position, "SDL_Point*", "Circle constructor") && !NULL63(&color, "SDL_Color*", "Circle constructor") && !NULL63(&rotation, "SDL_Point*", "Circle constructor"))
+	{
+		pointsPos.push_back(position);
+		this->diameter = diameter;
+		this->color = color;
+		this->rotation = rotation;
+	}
+}
+
+void Circle::Draw(SDL_Renderer *renderer)
+{
+	if (NULL63(renderer, "SDL_Renderer*", "Line::Draw function"))
 	{
 		return;
 	}
 
-	if (rectangle != nullptr)
-	{
-		return;
-	}
+	Uint8 r = 0, g = 0, b = 0, a = 0;
+	SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
 
-	if (polygon != nullptr)
-	{
-		return;
-	}
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderFillCircle(renderer, { pointsPos[0].x, pointsPos[0].y, (Uint16)(diameter / 2) });
+
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+}
+
+Circle::~Circle()
+{
+	pointsPos.clear();
+}
+
+Triangle::Triangle()
+{
+}
+
+void Triangle::Draw(SDL_Renderer *renderer)
+{
+}
+
+Triangle::~Triangle()
+{
+	pointsPos.clear();
+}
+
+Rectangle::Rectangle()
+{
+}
+
+void Rectangle::Draw(SDL_Renderer *renderer)
+{
+}
+
+Rectangle::~Rectangle()
+{
+	pointsPos.clear();
+}
+
+Polygon::Polygon()
+{
+}
+
+void Polygon::Draw(SDL_Renderer *renderer)
+{
+}
+
+Polygon::~Polygon()
+{
+	pointsPos.clear();
 }

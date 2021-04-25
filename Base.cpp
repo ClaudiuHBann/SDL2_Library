@@ -138,7 +138,7 @@ void Base::RemoveRenderer(SDL_Renderer *renderer)
 	SDL_DestroyRenderer(renderer);
 }
 
-void SDL_RenderFillCircle(SDL_Renderer *renderer, const SDL_Point &position, const Uint16 radius)
+void SDL_RenderFillCircle(SDL_Renderer *renderer, const SDL_Circle &circle)
 {
 	if (renderer == nullptr)
 	{
@@ -146,18 +146,18 @@ void SDL_RenderFillCircle(SDL_Renderer *renderer, const SDL_Point &position, con
 		return;
 	}
 
-	if (&position == nullptr)
+	if (&circle == nullptr)
 	{
-		SDL_PrintError("SDL_Point* parameter from SDL_RenderFillCircle function call is null!");
+		SDL_PrintError("SDL_Circle* parameter from SDL_RenderFillCircle function call is null!");
 		return;
 	}
 
-	for (double dy = 1.0; dy <= radius; dy += 1.0)
+	for (double dy = 1.0; dy <= circle.radius; dy += 1.0)
 	{
-		double dx = floor(sqrt((2.0 * radius * dy) - (dy * dy)));
+		double dx = floor(sqrt((2.0 * circle.radius * dy) - (dy * dy)));
 
-		SDL_RenderDrawLine(renderer, position.x - (int)dx, position.y + (int)dy - radius, position.x + (int)dx, position.y + (int)dy - radius);
-		SDL_RenderDrawLine(renderer, position.x - (int)dx, position.y - (int)dy + radius, position.x + (int)dx, position.y - (int)dy + radius);
+		SDL_RenderDrawLine(renderer, circle.point.x - (int)dx, circle.point.y + (int)dy - circle.radius, circle.point.x + (int)dx, circle.point.y + (int)dy - circle.radius);
+		SDL_RenderDrawLine(renderer, circle.point.x - (int)dx, circle.point.y - (int)dy + circle.radius, circle.point.x + (int)dx, circle.point.y - (int)dy + circle.radius);
 	}
 }
 

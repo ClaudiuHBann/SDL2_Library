@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#define NULL63(var, type, where) IsNull63(var, type, where)
+
 typedef struct SDL_Circle
 {
 	SDL_Point point;
@@ -32,6 +34,20 @@ typedef struct SDL_FTriangle
 	SDL_FPoint point3;
 }SDL_FTriangle;
 
+typedef struct SDL_Rectangle
+{
+	SDL_Point point;
+	Uint16 width;
+	Uint16 height;
+}SDL_Rectangle;
+
+typedef struct SDL_FRectangle
+{
+	SDL_FPoint point;
+	float width;
+	float height;
+}SDL_FRectangle;
+
 typedef struct SDL_Polygon
 {
 	std::vector<SDL_Point> points;
@@ -48,7 +64,7 @@ public:
 	Base();
 	~Base();
 
-	SDL_Window *CreateWindow(const std::string& windowName = "Window name is not initialized", const Uint16 windowWidth = 640, const Uint16 windowHeight = 480, const Uint32 flags = 0);
+	SDL_Window *CreateWindow(const std::string &windowName = "Window name is not initialized", const Uint16 windowWidth = 640, const Uint16 windowHeight = 480, const Uint32 flags = 0);
 	SDL_Renderer *CreateRenderer(SDL_Window *window, const Uint32 flags = 0);
 	void RemoveWindow(SDL_Window *window);
 	void RemoveRenderer(SDL_Renderer *renderer);
@@ -59,7 +75,7 @@ private:
 };
 
 //Additional SDL functions
-void SDL_RenderFillCircle(SDL_Renderer *renderer, const SDL_Point &position, const Uint16 radius);
+void SDL_RenderFillCircle(SDL_Renderer *renderer, const SDL_Circle &circle);
 
 template<typename T>
 T SDL_GetRandomNumberInRange(T startRange, T endRange)
@@ -67,9 +83,23 @@ T SDL_GetRandomNumberInRange(T startRange, T endRange)
 	return startRange + (T)rand() / ((T)RAND_MAX / (T)(endRange - startRange));
 }
 
-inline void SDL_PrintError(const std::string& errorMessage);
+inline void SDL_PrintError(const std::string &errorMessage);
 
-SDL_bool SDL_CheckFilePath(const std::string& filePath);
+template<typename T>
+bool IsNull63(const T *t, const std::string &type, const std::string &where)
+{
+	if (t == nullptr)
+	{
+		SDL_PrintError(type + " parameter from " + where + " call is null!");
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+SDL_bool SDL_CheckFilePath(const std::string &filePath);
 
 SDL_Texture *SDL_GetRendererAsTexture(SDL_Window *window, SDL_Renderer *renderer, const SDL_Rect &windowRect = { 0, 0, 0, 0 });
 
