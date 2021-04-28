@@ -45,9 +45,7 @@ public:
 class Triangle : public Shape2D
 {
 public:
-	SDL_FPoint scale = { 1.0f, 1.0f };
-
-	Triangle(const SDL_Point &position, const SDL_FPoint scale, const SDL_Color &color = { 0, 0, 0, 0 }, const SDL_Point &rotation = { 0, 0 });
+	Triangle(const SDL_Point &pos1, const SDL_Point &pos2, const SDL_Point &pos3, const SDL_Color &color = { 0, 0, 0, 0 }, const SDL_Point &rotation = { 0, 0 });
 	Triangle() {}
 	~Triangle();
 
@@ -59,7 +57,8 @@ class Rectangle : public Shape2D
 public:
 	SDL_FPoint scale = { 1.0f, 1.0f };
 
-	Rectangle();
+	Rectangle(const SDL_Point &position, const SDL_FPoint scale, const SDL_Color &color = { 0, 0, 0, 0 }, const SDL_Point &rotation = { 0, 0 });
+	Rectangle() {}
 	~Rectangle();
 
 	void Draw(SDL_Renderer *renderer) override;
@@ -68,9 +67,8 @@ public:
 class Polygon : public Shape2D
 {
 public:
-	SDL_FPoint scale = { 1.0f, 1.0f };
-
-	Polygon();
+	Polygon(const SDL_Polygon &polygonPoss, const SDL_Color &color = { 0, 0, 0, 0 }, const SDL_Point &rotation = { 0, 0 });
+	Polygon() {}
 	~Polygon();
 
 	void Draw(SDL_Renderer *renderer) override;

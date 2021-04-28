@@ -54,7 +54,7 @@ Base::~Base()
 	windowsList.clear();
 }
 
-SDL_Window *Base::CreateWindow(const std::string& windowName, const Uint16 windowWidth, const Uint16 windowHeight, const Uint32 flags)
+SDL_Window *Base::CreateWindow(const std::string &windowName, const Uint16 windowWidth, const Uint16 windowHeight, const Uint32 flags)
 {
 	if (&windowName == nullptr)
 	{
@@ -161,7 +161,126 @@ void SDL_RenderFillCircle(SDL_Renderer *renderer, const SDL_Circle &circle)
 	}
 }
 
-inline void SDL_PrintError(const std::string& errorMessage)
+void SDL_RenderFillTriangle(SDL_Renderer *renderer, const SDL_Point &pos1, const SDL_Point &pos2, const SDL_Point &pos3)
+{
+	if (!NULL63(&pos1, "SDL_Point*", "SDL_RenderFillTriangle function") &&
+		!NULL63(&pos2, "SDL_Point*", "SDL_RenderFillTriangle function") &&
+		!NULL63(&pos3, "SDL_Point*", "SDL_RenderFillTriangle function") &&
+		!NULL63(renderer, "SDL_Renderer*", "SDL_RenderFillTriangle function"))
+	{
+		return;
+	}
+
+	int maxX = std::max(pos1.x, std::max(pos2.x, pos3.x));
+	int minX = std::min(pos1.x, std::min(pos2.x, pos3.x));
+	int maxY = std::max(pos1.y, std::max(pos2.y, pos3.y));
+	int minY = std::min(pos1.y, std::min(pos2.y, pos3.y));
+
+	SDL_Point vs1 = { pos2.x - pos1.x, pos2.y - pos1.y };
+	SDL_Point vs2 = { pos3.x - pos1.x, pos3.y - pos1.y };
+
+	for (int x = minX; x <= maxX; x++)
+	{
+		for (int y = minY; y <= maxY; y++)
+		{
+			SDL_Point q = { x - pos1.x, y - pos1.y };
+
+			float s = (float)CrossProduct(q, vs2) / CrossProduct(vs1, vs2);
+			float t = (float)CrossProduct(vs1, q) / CrossProduct(vs1, vs2);
+
+			if ((s >= 0) && (t >= 0) && (s + t <= 1))
+			{
+				SDL_RenderDrawPoint(renderer, x, y);
+			}
+		}
+	}
+}
+
+void SDL_RenderFillPolygon(SDL_Renderer *renderer, const SDL_Polygon &polygon)
+{
+	if (!NULL63(renderer, "SDL_Renderer*", "SDL_RenderFillPolygon function") &&
+		!NULL63(&polygon, "SDL_Polygon*", "SDL_RenderFillPolygon function"))
+	{
+		return;
+	}
+
+	if (polygon.points.size() < 3)
+	{
+		SDL_PrintError("SDL_Polygon* parameter from SDL_RenderFillPolygon function has less than 3 points so it's not a polygon");
+	}
+
+	int maxX = polygon.points[0].x, maxY = polygon.points[0].y, minX = polygon.points[0].x, minY = polygon.points[0].y;
+
+	for (int i = 1; i < polygon.points.size(); i++)
+	{
+		if (polygon.points[i].x > maxX)
+		{
+			maxX = polygon.points[i].x;
+		}
+
+		if (minX > polygon.points[i].x)
+		{
+			minX = polygon.points[i].x;
+		}
+
+		if (polygon.points[i].y > maxY)
+		{
+			maxY = polygon.points[i].y;
+		}
+
+		if (minY > polygon.points[i].y)
+		{
+			minY = polygon.points[i].y;
+		}
+	}
+
+	SDL_Point tempPoint = { 0, 0 };
+	for (int i = minY - 1; i <= maxY; i++)
+	{
+		for (int j = minX - 1; j <= maxX; j++)
+		{
+			tempPoint.x = j;
+			tempPoint.y = i;
+
+			if (SDL_PointInPolygon(tempPoint, polygon))
+			{
+				SDL_RenderDrawPoint(renderer, j, i);
+			}
+		}
+	}
+}
+
+bool SDL_PointInPolygon(const SDL_Point &point, const SDL_Polygon &polygon)
+{
+	if (!NULL63(&point, "SDL_Point*", "SDL_PointInPolygon function") &&
+		!NULL63(&polygon, "SDL_Polygon*", "SDL_PointInPolygon function"))
+	{
+		return false;
+	}
+
+	if (polygon.points.size() < 3)
+	{
+		SDL_PrintError("SDL_Polygon* parameter from SDL_RenderFillPolygon function has less than 3 points so it's not a polygon");
+	}
+
+	int j = polygon.points.size() - 1;
+	bool isInPolygon = false;
+
+	for (int i = 0; i < polygon.points.size(); i++)
+	{
+		if (((polygon.points[i].y > point.y) != (polygon.points[j].y > point.y)) &&
+			(point.x < (polygon.points[j].x - polygon.points[i].x) * (point.y - polygon.points[i].y) / (polygon.points[j].y - polygon.points[i].y) + polygon.points[i].x))
+		{
+			isInPolygon = true;
+		}
+
+		j = i;
+	}
+
+	return isInPolygon;
+}
+
+inline void SDL_PrintError(const std::string &errorMessage)
 {
 	if (&errorMessage == nullptr)
 	{
@@ -172,7 +291,13 @@ inline void SDL_PrintError(const std::string& errorMessage)
 	std::cerr << std::endl << errorMessage << std::endl;
 }
 
-SDL_bool SDL_CheckFilePath(const std::string& filePath)
+inline int CrossProduct(const SDL_Point &p1, const SDL_Point &p2)
+{
+	return (!NULL63(&p1, "SDL_Point*", "CrossProduct function") &&
+		!NULL63(&p2, "SDL_Point*", "CrossProduct function")) ? (p1.x * p2.y - p1.y * p2.x) : -1;
+}
+
+SDL_bool SDL_CheckFilePath(const std::string &filePath)
 {
 	if (&filePath == nullptr)
 	{

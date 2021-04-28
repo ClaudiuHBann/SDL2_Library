@@ -4,6 +4,7 @@
 #include <SDL_image.h>
 
 #include <iostream>
+#include <time.h>
 
 #include "Base.h"
 #include "Sound.h"
@@ -21,16 +22,43 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	bool gameRunning = true;
 
-	Shape2D* shape1 = new Line({ 100, 100 }, { 423, 327 }, 1.0f, { 255, 0, 0, 255 });
-	Line* line = dynamic_cast<Line *>(shape1);
-	
-	Shape2D *shape2 = new Circle({ 300, 300 }, 150.0f, { 0, 255, 0, 255 });
-	Circle *circle = dynamic_cast<Circle *>(shape2);
+	SDL_Polygon polygons[100];
+	SDL_Point tempPoint;
+	for (int i = 0; i < 100; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			tempPoint.x = SDL_GetRandomNumberInRange(0, 640);
+			tempPoint.y = SDL_GetRandomNumberInRange(0, 480);
+
+			polygons[i].points.push_back(tempPoint);
+		}
+	}
+
+	Polygon polys[100];
+	for (int i = 0; i < 100; i++)
+	{
+		polys[i].pointsPos = polygons[i].points;
+		polys[i].color = { (Uint8)SDL_GetRandomNumberInRange(0, 255), (Uint8)SDL_GetRandomNumberInRange(0, 255), (Uint8)SDL_GetRandomNumberInRange(0, 255), (Uint8)SDL_GetRandomNumberInRange(0, 255) };
+	}
+
+	bool once = false;
+	clock_t start;
 
 	while (gameRunning)
 	{
-		line->Draw(mainRenderer);
-		circle->Draw(mainRenderer);
+		if (!once)
+		{
+			start = clock();
+
+			for (int i = 0; i < 100; i++)
+			{
+				polys[i].Draw(mainRenderer);
+			}
+			SDL_RenderPresent(mainRenderer);
+		}
+
+		polys[0].Draw(mainRenderer);
 		SDL_RenderPresent(mainRenderer);
 
 		//while (SDL_WaitEvent(&event) >= 0 && gameRunning)
@@ -43,6 +71,13 @@ int main(int argc, char *argv[])
 				break;
 			}
 		}
+
+		if (!once)
+		{
+			std::cout << "Time to draw 100 polygons: " << clock() - start;
+		}
+
+		once = true;
 	}
 
 	return 0;

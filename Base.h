@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#include <iostream>
+
 #define NULL63(var, type, where) IsNull63(var, type, where)
 
 typedef struct SDL_Circle
@@ -14,25 +16,12 @@ typedef struct SDL_Circle
 	Uint16 radius;
 }SDL_Circle;
 
-typedef struct SDL_FCircle
-{
-	SDL_FPoint point;
-	Uint16 radius;
-}SDL_FCircle;
-
 typedef struct SDL_Triangle
 {
 	SDL_Point point1;
 	SDL_Point point2;
 	SDL_Point point3;
 }SDL_Triangle;
-
-typedef struct SDL_FTriangle
-{
-	SDL_FPoint point1;
-	SDL_FPoint point2;
-	SDL_FPoint point3;
-}SDL_FTriangle;
 
 typedef struct SDL_Rectangle
 {
@@ -41,22 +30,10 @@ typedef struct SDL_Rectangle
 	Uint16 height;
 }SDL_Rectangle;
 
-typedef struct SDL_FRectangle
-{
-	SDL_FPoint point;
-	float width;
-	float height;
-}SDL_FRectangle;
-
 typedef struct SDL_Polygon
 {
 	std::vector<SDL_Point> points;
 }SDL_Polygon;
-
-typedef struct SDL_FPolygon
-{
-	std::vector<SDL_FPoint> points;
-}SDL_FPolygon;
 
 class Base
 {
@@ -74,8 +51,19 @@ private:
 	std::list<SDL_Renderer *> renderersList;
 };
 
-//Additional SDL functions
+
+
+/*
+	Additional SDL functions
+*/
+
 void SDL_RenderFillCircle(SDL_Renderer *renderer, const SDL_Circle &circle);
+
+void SDL_RenderFillTriangle(SDL_Renderer *renderer, const SDL_Point &pos1, const SDL_Point &pos2, const SDL_Point &pos3);
+
+void SDL_RenderFillPolygon(SDL_Renderer *renderer, const SDL_Polygon &polygon);
+
+bool SDL_PointInPolygon(const SDL_Point &point, const SDL_Polygon &polygon);
 
 template<typename T>
 T SDL_GetRandomNumberInRange(T startRange, T endRange)
@@ -98,6 +86,8 @@ bool IsNull63(const T *t, const std::string &type, const std::string &where)
 		return 0;
 	}
 }
+
+inline int CrossProduct(const SDL_Point &p1, const SDL_Point &p2);
 
 SDL_bool SDL_CheckFilePath(const std::string &filePath);
 
