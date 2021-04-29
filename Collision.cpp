@@ -6,6 +6,9 @@ SDL_bool isInitialized6 = SDL_FALSE;
 SDL_bool closeThreads = SDL_FALSE;
 Uint8 numberOfCollisionObjects = 0;
 
+std::list<Shape2D> shapesForCheckingDistances;
+std::list<Shape2D> shapesForCheckingCollisions;
+
 int CheckDistanceBetweenObjects(void *)
 {
 	while (closeThreads)

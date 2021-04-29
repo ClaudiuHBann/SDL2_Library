@@ -81,13 +81,13 @@ bool IsNull63(const T *t, const std::string &type, const std::string &where)
 		SDL_PrintError(type + " parameter from " + where + " call is null!");
 		return 1;
 	}
-	else
-	{
-		return 0;
-	}
+
+	return 0;
 }
 
 inline int CrossProduct(const SDL_Point &p1, const SDL_Point &p2);
+
+
 
 SDL_bool SDL_CheckFilePath(const std::string &filePath);
 

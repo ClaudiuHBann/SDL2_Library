@@ -163,10 +163,10 @@ void SDL_RenderFillCircle(SDL_Renderer *renderer, const SDL_Circle &circle)
 
 void SDL_RenderFillTriangle(SDL_Renderer *renderer, const SDL_Point &pos1, const SDL_Point &pos2, const SDL_Point &pos3)
 {
-	if (!NULL63(&pos1, "SDL_Point*", "SDL_RenderFillTriangle function") &&
-		!NULL63(&pos2, "SDL_Point*", "SDL_RenderFillTriangle function") &&
-		!NULL63(&pos3, "SDL_Point*", "SDL_RenderFillTriangle function") &&
-		!NULL63(renderer, "SDL_Renderer*", "SDL_RenderFillTriangle function"))
+	if (NULL63(&pos1, "SDL_Point*", "SDL_RenderFillTriangle function") ||
+		NULL63(&pos2, "SDL_Point*", "SDL_RenderFillTriangle function") ||
+		NULL63(&pos3, "SDL_Point*", "SDL_RenderFillTriangle function") ||
+		NULL63(renderer, "SDL_Renderer*", "SDL_RenderFillTriangle function"))
 	{
 		return;
 	}
@@ -198,8 +198,8 @@ void SDL_RenderFillTriangle(SDL_Renderer *renderer, const SDL_Point &pos1, const
 
 void SDL_RenderFillPolygon(SDL_Renderer *renderer, const SDL_Polygon &polygon)
 {
-	if (!NULL63(renderer, "SDL_Renderer*", "SDL_RenderFillPolygon function") &&
-		!NULL63(&polygon, "SDL_Polygon*", "SDL_RenderFillPolygon function"))
+	if (NULL63(renderer, "SDL_Renderer*", "SDL_RenderFillPolygon function") ||
+		NULL63(&polygon, "SDL_Polygon*", "SDL_RenderFillPolygon function"))
 	{
 		return;
 	}
@@ -252,8 +252,8 @@ void SDL_RenderFillPolygon(SDL_Renderer *renderer, const SDL_Polygon &polygon)
 
 bool SDL_PointInPolygon(const SDL_Point &point, const SDL_Polygon &polygon)
 {
-	if (!NULL63(&point, "SDL_Point*", "SDL_PointInPolygon function") &&
-		!NULL63(&polygon, "SDL_Polygon*", "SDL_PointInPolygon function"))
+	if (NULL63(&point, "SDL_Point*", "SDL_PointInPolygon function") ||
+		NULL63(&polygon, "SDL_Polygon*", "SDL_PointInPolygon function"))
 	{
 		return false;
 	}
@@ -264,20 +264,16 @@ bool SDL_PointInPolygon(const SDL_Point &point, const SDL_Polygon &polygon)
 	}
 
 	int j = polygon.points.size() - 1;
-	bool isInPolygon = false;
-
-	for (int i = 0; i < polygon.points.size(); i++)
+	for (int i = 0; i < polygon.points.size(); j = i++)
 	{
 		if (((polygon.points[i].y > point.y) != (polygon.points[j].y > point.y)) &&
 			(point.x < (polygon.points[j].x - polygon.points[i].x) * (point.y - polygon.points[i].y) / (polygon.points[j].y - polygon.points[i].y) + polygon.points[i].x))
 		{
-			isInPolygon = true;
+			return true;
 		}
-
-		j = i;
 	}
 
-	return isInPolygon;
+	return false;
 }
 
 inline void SDL_PrintError(const std::string &errorMessage)
@@ -293,8 +289,8 @@ inline void SDL_PrintError(const std::string &errorMessage)
 
 inline int CrossProduct(const SDL_Point &p1, const SDL_Point &p2)
 {
-	return (!NULL63(&p1, "SDL_Point*", "CrossProduct function") &&
-		!NULL63(&p2, "SDL_Point*", "CrossProduct function")) ? (p1.x * p2.y - p1.y * p2.x) : -1;
+	return (NULL63(&p1, "SDL_Point*", "CrossProduct function") ||
+		NULL63(&p2, "SDL_Point*", "CrossProduct function")) ? -1 : (p1.x * p2.y - p1.y * p2.x);
 }
 
 SDL_bool SDL_CheckFilePath(const std::string &filePath)
